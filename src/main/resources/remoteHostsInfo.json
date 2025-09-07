@@ -1,0 +1,27 @@
+{
+  "keyPath": "/Users/justin/gts/gts2newkey.pem",
+  "localLogDir": "/Users/justin/gts/logs",
+  "remoteHosts": [
+    {
+      "ip": "192.168.1.101",
+      "port": 22,
+      "user": "ec2-user",
+      "logDir": "/log/RelatedAccount_uat",
+      "logFileName": "RelatedAccount_api_1.0.4_UAT.log"
+    },
+    {
+      "ip": "192.168.1.102",
+      "port": 22,
+      "user": "ubuntu",
+      "logDir": "/log/ServiceB_uat",
+      "logFileName": "ServiceB_api_2.3.1_UAT.log"
+    },
+    {
+      "ip": "192.168.1.103",
+      "port": 2222,
+      "user": "admin",
+      "logDir": "/var/logs/ServiceC",
+      "logFileName": "ServiceC_api_3.0.0.log"
+    }
+  ]
+}
