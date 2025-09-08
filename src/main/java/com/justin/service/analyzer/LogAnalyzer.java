@@ -1,4 +1,4 @@
-package com.justin.analyzer;
+package com.justin.service.analyzer;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;

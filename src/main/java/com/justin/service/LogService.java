@@ -1,36 +1,22 @@
-package com.justin;
+package com.justin.service;
 
+import com.justin.config.ConfigLoader;
 import com.justin.ssh.ScpClient;
-import com.justin.analyzer.LogAnalyzer;
+import com.justin.service.analyzer.LogAnalyzer;
 
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class Main {
+public class LogService {
 
-    public static void runAnalysis(String pemPath, JTextArea logArea) throws InterruptedException {
-        String[] services = {"A","B","C"};
-        Map<String,List<String>> servers = Map.of(
-                "A", List.of("192.168.1.101"),
-                "B", List.of("192.168.1.201"),
-                "C", List.of("192.168.1.301")
-        );
+    public static void downloadLogAndAnalysis(JTextArea logArea, List<ConfigLoader.RemoteHost> selectedHosts, String localLogDir,
+                                              String keyPathFile) throws InterruptedException {
+
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
+        //todo: download selectdHosts logs
 
-        for(String service : services) {
-            for(String host : servers.get(service)) {
-                executor.submit(() -> {
-                    try {
-                        logArea.append("下載 "+service+" log 從 "+host+"\n");
-                        ScpClient.scpFromRemote(host, 22, "user", pemPath, "/var/log/"+service+".log", "./logs/"+service);
-                    } catch(Exception e) {
-                        logArea.append("錯誤: " + e.getMessage() + "\n");
-                    }
-                });
-            }
-        }
         executor.shutdown();
         executor.awaitTermination(15, TimeUnit.MINUTES);
 

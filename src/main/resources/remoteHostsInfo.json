@@ -1,5 +1,5 @@
 {
-  "keyPath": "/Users/justin/gts/gts2newkey.pem",
+  "keyPathFile": "/Users/justin/gts/gts2newkey.pem",
   "localLogDir": "/Users/justin/gts/logs",
   "remoteHosts": [
     {

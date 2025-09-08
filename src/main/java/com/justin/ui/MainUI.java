@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MainUI extends JFrame {
     private ConfigLoader.RemoteHostsInfo config;
@@ -28,7 +30,7 @@ public class MainUI extends JFrame {
         // Top panel
         JPanel topPanel = new JPanel(new GridLayout(2, 2));
         topPanel.add(new JLabel("Key Path:"));
-        keyPathField = new JTextField(config.getKeyPath());
+        keyPathField = new JTextField(config.getKeyPathFile());
         topPanel.add(keyPathField);
 
         topPanel.add(new JLabel("Local Log Dir:"));
@@ -95,6 +97,9 @@ public class MainUI extends JFrame {
             DefaultTableModel model = (DefaultTableModel) hostTable.getModel();
             java.util.List<ConfigLoader.RemoteHost> selectedHosts = new java.util.ArrayList<>();
 
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddHHmmss");
+            String nowStr = now.format(formatter);
             for (int i = 0; i < model.getRowCount(); i++) {
                 Boolean isSelected = (Boolean) model.getValueAt(i, 0);
                 if (isSelected != null && isSelected) {
@@ -103,7 +108,7 @@ public class MainUI extends JFrame {
                     host.setPort(Integer.parseInt(model.getValueAt(i, 2).toString()));
                     host.setUser((String) model.getValueAt(i, 3));
                     host.setLogDir((String) model.getValueAt(i, 4));
-                    host.setLogFileName((String) model.getValueAt(i, 5));
+                    host.setLogFileName((String) model.getValueAt(i, 5)+ "_" + nowStr); // 加上時間戳
                     selectedHosts.add(host);
                 }
             }
@@ -130,7 +135,7 @@ public class MainUI extends JFrame {
     }
 
     private void saveConfig() throws IOException {
-        config.setKeyPath(keyPathField.getText());
+        config.setKeyPathFile(keyPathField.getText());
         config.setLocalLogDir(localLogDirField.getText());
 
         DefaultTableModel model = (DefaultTableModel) hostTable.getModel();

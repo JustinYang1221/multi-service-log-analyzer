@@ -63,16 +63,16 @@ public class ConfigLoader {
     }
 
     public static class RemoteHostsInfo {
-        private String keyPath;
+        private String keyPathFile;
         private String localLogDir;
         private java.util.List<RemoteHost> remoteHosts;
 
-        public String getKeyPath() {
-            return keyPath;
+        public String getKeyPathFile() {
+            return keyPathFile;
         }
 
-        public void setKeyPath(String keyPath) {
-            this.keyPath = keyPath;
+        public void setKeyPathFile(String keyPathFile) {
+            this.keyPathFile = keyPathFile;
         }
 
         public String getLocalLogDir() {
