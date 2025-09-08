@@ -15,7 +15,25 @@ public class LogService {
 
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
-        //todo: download selectdHosts logs
+
+        // collect service names for later analysis
+        List<String> services = new ArrayList<>();
+
+        // download logs from each selected host in parallel
+        for (ConfigLoader.RemoteHost host : selectedHosts) {
+            services.add(host.getLogFileName());
+            executor.submit(() -> {
+                String remotePath = host.getLogDir() + "/" + host.getLogFileName();
+                try {
+                    ScpClient.scpFromRemote(host.getIp(), host.getPort(), host.getUser(), keyPathFile, remotePath, localLogDir);
+                    SwingUtilities.invokeLater(() ->
+                            logArea.append("已下載 " + remotePath + " from " + host.getIp() + "\n"));
+                } catch (Exception e) {
+                    SwingUtilities.invokeLater(() ->
+                            logArea.append("下載 " + remotePath + " 失敗: " + e.getMessage() + "\n"));
+                }
+            });
+        }
 
         executor.shutdown();
         executor.awaitTermination(15, TimeUnit.MINUTES);
@@ -23,10 +41,10 @@ public class LogService {
         logArea.append("開始鏈式分析...\n");
 
         Set<String> prevTraceIds = null;
-        List<Map<String,List<String>>> logsPerService = new ArrayList<>();
+        List<Map<String, List<String>>> logsPerService = new ArrayList<>();
         String traceRegex = "traceId=(\\w+)";
-        for(String service: services){
-            Map<String,List<String>> result = LogAnalyzer.analyzeServiceLogs("./logs/"+service, prevTraceIds, traceRegex);
+        for (String service : services) {
+            Map<String, List<String>> result = LogAnalyzer.analyzeServiceLogs("./logs/" + service, prevTraceIds, traceRegex);
             prevTraceIds = result.keySet();
             logsPerService.add(result);
         }
